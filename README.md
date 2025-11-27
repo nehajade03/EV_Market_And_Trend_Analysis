@@ -32,11 +32,11 @@ The following formulas were used to manually generate a city-wise Electric Vehic
 | Metric | Formula | 
 |:---|:---|
 | Unique City List | `=UNIQUE(EV_Data!A2:A177826)` |
-| Total EVs by City | `=COUNTIF(EV_Data!A:A, B5)` |
-| Electric Utility by City | `=VLOOKUP(B5, EV_Data!A:M, 13, FALSE)` |
-| Average Electric Range | `=AVERAGEIFS(EV_Data!J:J, EV_Data!A:A, B5)` |
-| Max Base MSRP | `=MAXIFS(EV_Data!J:J, EV_Data!A:A, B5)` |
-| City-wise % Share of EVs | `=COUNTIF(EV_Data!A:A, B5) / COUNTA(EV_Data!A:A) * 100` |
+| Total EVs by City | `=COUNTIF(EV_Data!A2:A177826,A2))` |
+| Electric Utility by City | `=XLOOKUP(TRIM(CLEAN(A2)), EV_Data!A2:A177826, EV_Data!M2:M177826, "Not Found", 0)` |
+| Average Electric Range | `=AVERAGE(EV_Data!J2:J177826, EV_Data!A2:A177826, A2)` |
+| Max Base MSRP | `=MAXIFS(EV_Data!J2:J177826, EV_Data!A2:A177826, A2)` |
+| City-wise % Share of EVs | `=COUNTIF(EV_Data!A2:A177826, A2) / COUNTA(EV_Data!A2:A177826) * 100` |
 
 This manual approach was performed alongside VBA automation to cross-verify the data accuracy and enhance reporting.
 
