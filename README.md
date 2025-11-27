@@ -1,4 +1,4 @@
-# Electric Vehicles Analysis Dashboard
+# Electric Vehicles Market Analysis Dashboard
 
 ## Introduction
 
