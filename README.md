@@ -25,22 +25,91 @@ The primary goals of this dashboard are to:
 
 The dataset contains information about electric vehicle models, manufacturers, states, CAFV eligibility, and battery range. The data is structured and processed using Excel formulas, PivotTables, and dynamic filtering for smooth interactivity.
 
-## 📊 Manual City-wise EV Summary (Using Excel Formulas) & Conditional Formatting
+# 📊 EV Dataset – Full Formula Reference
 
-The following formulas were used to manually generate a city-wise Electric Vehicle (EV) summary in Excel:
+## 1. City-Level Analysis
 
-| Metric | Formula | 
-|:---|:---|
-| Unique City List | `=UNIQUE(EV_Data!A2:A177826)` |
-| Total EVs by City | `=COUNTIF(EV_Data!A2:A177826,A2))` |
-| Electric Utility by City | `=XLOOKUP(TRIM(CLEAN(A2)), EV_Data!A2:A177826, EV_Data!M2:M177826, "Not Found", 0)` |
-| Average Electric Range | `=AVERAGE(EV_Data!J2:J177826, EV_Data!A2:A177826, A2)` |
-| Max Base MSRP | `=MAXIFS(EV_Data!J2:J177826, EV_Data!A2:A177826, A2)` |
-| City-wise % Share of EVs | `=COUNTIF(EV_Data!A2:A177826, A2) / COUNTA(EV_Data!A2:A177826) * 100` |
-
-This manual approach was performed alongside VBA automation to cross-verify the data accuracy and enhance reporting.
+| Metric | Formula |
+|--------|---------|
+| **Total EVs by City** | `=COUNTIF(EV_Data!A:A, A3)` |
+| **Electric Utility by City** | `=XLOOKUP(TRIM(CLEAN(A3)), EV_Data!A:A, EV_Data!M:M, "Not Found")` |
 
 ---
+
+## 2. Summary Metrics (Top Section)
+
+| Metric | Formula |
+|--------|---------|
+| **Total EVs** | `=COUNTA(EV_Data!D:D)` |
+| **Count of BEVs** | `=COUNTIF(EV_Data!E:E, "BEV")` |
+| **Count of PHEVs** | `=COUNTIF(EV_Data!E:E, "PHEV")` |
+| **EV Makers (Unique)** | `=COUNTA(UNIQUE(EV_Data!H:H))` |
+| **EV Models (Unique)** | `=COUNTA(UNIQUE(EV_Data!I:I))` |
+| **Count by Specific Counties** | `=COUNTIF(EV_Data!C:C, "King")` *(example—adjust county name as needed)* |
+
+---
+
+## 3. CAFV Eligibility Analysis
+
+| Metric | Formula |
+|--------|---------|
+| **CAFV Eligible** | `=COUNTIF(EV_Data!L:L, "Clean Alternative Fuel Vehicle Eligible")` |
+| **CAFV Not Eligible** | `=COUNTIF(EV_Data!L:L, "Not eligible due to low battery range")` |
+
+---
+
+## 4. Year-Over-Year Growth Table
+
+### **EV Registrations (Column H)**   
+Formula if calculated manually per year:  
+`=COUNTIF(EV_Data!D:D, G8)`
+
+### **EV Count Difference (Column I)**  
+=COUNTIF(EV_Data!D:D, G8) - COUNTIF(EV_Data!D:D, G7)
+
+# 📊 Year-over-Year (YOY) Growth Formula Set  
+(Using COUNTIF only — matches your original logic)
+
+| Purpose | Formula |
+|--------|----------|
+| **Previous Year EV Count** | `=COUNTIF(EV_Data!D:D, G7)` |
+| **EV Count Difference (YOY Change)** | `=COUNTIF(EV_Data!D:D, G8) - COUNTIF(EV_Data!D:D, G7)` |
+| **YOY Percentage Growth** | `=((COUNTIF(EV_Data!D:D, G8) - COUNTIF(EV_Data!D:D, G7)) / COUNTIF(EV_Data!D:D, G7))` |
+
+
+<img width="1910" height="950" alt="image" src="https://github.com/user-attachments/assets/105083e3-7bb7-42e4-b1fe-4b59676e18db" />
+
+
+# 📄 **Summary Report**
+
+### 🔹 **Top EV Cities**
+Cities like **Seattle, Redmond, Bellevue, Sammamish, Issaquah, and Kirkland** dominate EV registrations.  
+Most are served by **Puget Sound Energy** and **Seattle City Light**.
+
+### 🔹 **EV Totals**
+- **Total EVs:** 177,824  
+- **BEVs:** 139,168  
+- **PHEVs:** 38,656  
+
+### 🔹 **Manufacturers & Models**
+- **Unique Makers:** 42  
+- **Unique Models:** 139  
+
+### 🔹 **CAFV Eligibility**
+- **Eligible:** 66,289  
+- **Not Eligible:** 19,585
+
+### 🔹 **Year-Over-Year Growth**
+- Explosive early growth (2011–2013)  
+- Consistent increases between 2015–2022  
+- **2023 adds the largest EV volume jump: +29,811**  
+- 2024 is negative due to incomplete data  
+
+### 🔹 **Key Insight**
+EV adoption is accelerating fastest in high-income, infrastructure-dense regions. Utilities serving these regions show strong alignment with EV growth patterns.
+
+---
+
 ## Conditional Formatting Applied:
 - **Headers** styled with bright green background and bold text.
 - **Total EVs** column color-coded from yellow (low) to green (high) using gradient scale.
@@ -139,9 +208,56 @@ The **Electric Vehicles Analysis Dashboard** in Excel provides a powerful and in
 - **Researchers & Analysts** studying EV adoption patterns.
 
 
-# Electric Vehicles Analysis Report (VBA)
+# Electric Vehicle (EV) Report Generator – Excel VBA
 
-This project contains a VBA macro (`GenerateEVReport`) that analyzes electric vehicle (EV) data stored in an Excel worksheet and generates a summary report.
+This project contains an **Excel VBA tool** that generates automated reports for Electric Vehicle (EV) data. Users can generate **City** or **Year** reports by simply clicking a button.
+
+## Features
+
+### 1. Interactive Buttons
+- **Generate City Report** – Enter a city to see EV data and insights.
+- **Generate Year Report** – Enter a year to see EV registrations and YoY growth.
+- Buttons are **locked and fixed**, ensuring consistent placement.
+
+### 2. Automated Report
+- Clears previous report content automatically.
+- Calculates **total EVs**, top manufacturers, EV types, CAFV eligibility, and utility providers.
+- Generates **YoY growth analysis** for year reports.
+- Applies formatting: headers, borders, highlights, and trend indicators.
+
+### 3. Data Insights
+Automatically provides key insights, e.g.:
+- Top manufacturer market share
+- BEV vs PHEV split
+- Top 3 makes share
+- CAFV eligibility distribution
+- Main utility provider
+
+### 4. Benefits
+- **Time-saving:** Instantly generates formatted reports without manual calculations.
+- **Consistency:** Standardized formatting and calculations every time.
+- **User-friendly:** No need for VBA knowledge; just click a button.
+
+## How It Works
+1. Open `EV_Report.xlsm`.
+2. Click **Generate City Report** or **Generate Year Report**.
+3. Enter the city or year when prompted.
+4. The report will automatically populate below the buttons.
+
+### Buttons
+<img width="625" height="62" alt="image" src="https://github.com/user-attachments/assets/412fc7fb-c951-4c82-8f66-d3917a7a5470" />
+
+
+### Sample City Report
+<img width="1526" height="656" alt="image" src="https://github.com/user-attachments/assets/58bebe06-78bc-4b98-8d8a-5a13067b89de" />
+
+### Sample Year Report
+<img width="1123" height="755" alt="image" src="https://github.com/user-attachments/assets/a8a957d0-e06c-4e0f-9972-e705879586cc" />
+
+## VBA Code Highlights
+- `SetupReportButtons()` – Creates and positions buttons.
+- `GenerateReport()` – Core function that creates tables, insights, and YoY analysis.
+- `City_Report()` / `Year_Report()` – Input validation and triggers report generation.
 
 ## Features
 - Top selling city
@@ -157,7 +273,7 @@ This project contains a VBA macro (`GenerateEVReport`) that analyzes electric ve
    - Column E: Make
    - Column F: Model
 3. Run the `GenerateEVReport` macro.
-4. The report will be generated in a new sheet called `EV_Report`.
+4. The report will be generated in a new sheet called `Report`.
 
 ## Requirements
 - Microsoft Excel
